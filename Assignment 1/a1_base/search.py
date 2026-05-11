@@ -6,26 +6,16 @@ DEFAULT_STATE = rushhour.DEFAULT_STATE
 
 
 def heuristic(state):
-    """
-    Admissible heuristic for Rush Hour A* search.
-
-    h(n) = 1 + number of distinct vehicles directly blocking 'x' on EXIT_Y row.
-
-    Lower bound argument:
-      - Each blocking vehicle requires at least 1 action to clear the path.
-      - 'x' itself requires at least 1 action to reach the exit.
-    Therefore h(n) <= true cost from state to goal.
-    """
-    # Find the rightmost column occupied by 'x' on EXIT_Y
+    # find the rightmost column occupied by x on EXIT_Y
     x_right = -1
     for col in range(state.SIZE):
         if state.get(col, state.EXIT_Y) == 'x':
             x_right = col
 
     if x_right == -1:
-        return 0  # 'x' not on board (should not happen)
+        return 0  # 'x' not on board should not happen
 
-    # Count distinct vehicles between x's right end and the exit column
+    # count how many distinct vehicles between x's right end and the exit column
     blockers = set()
     for col in range(x_right + 1, state.SIZE):
         c = state.get(col, state.EXIT_Y)

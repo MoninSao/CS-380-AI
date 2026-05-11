@@ -12,7 +12,7 @@ class Node:
         self.depth = depth   # g(n) = number of actions from root
 
     def path(self):
-        """Returns the list of states from the root node to this node."""
+        "returns the list of states from the root node to this node"
         nodes = []
         node = self
         while node is not None:
@@ -24,10 +24,7 @@ class Node:
 class Agent:
 
     def random_walk(self, state, n):
-        """
-        Performs a random walk of n steps through the state space.
-        Returns the list of n states visited (reconstructed from the final node).
-        """
+        "performs a random walk of n steps through the state space. returns the list of n states visited"
         node = Node(state)
         for _ in range(n - 1):
             actions = node.state.actions()
@@ -39,13 +36,7 @@ class Agent:
         return node.path()
 
     def _search(self, state, pop_front=True, heuristic=None):
-        """
-        Base graph-search algorithm shared by BFS, DFS, and A*.
 
-        pop_front=True  -> BFS (FIFO) or A* (sorted FIFO)
-        pop_front=False -> DFS (LIFO)
-        heuristic       -> callable h(state) used for A*; None for BFS/DFS
-        """
         h0 = heuristic(state) if heuristic else 0
         initial = Node(state, parent=None, value=h0, depth=0)
         open_list = [initial]
@@ -74,7 +65,7 @@ class Agent:
                 print(count)
                 return node
 
-            # Expand: add successors not yet closed
+            # expand by add successors not yet closed
             for action in node.state.actions():
                 next_state = node.state.execute(action)
                 if str(next_state) not in closed:
@@ -83,20 +74,20 @@ class Agent:
                     child = Node(next_state, parent=node, value=g + h, depth=g)
                     open_list.append(child)
 
-            # Keep open list sorted by f(n) for A*
+            # keep open list sorted by f(n) for A*
             if heuristic:
                 open_list.sort(key=lambda nd: nd.value)
 
         return None
 
     def bfs(self, state):
-        """Breadth-first search (FIFO open list, no heuristic)."""
+        "Breadth-first search FIFO open list, no heuristic"
         return self._search(state, pop_front=True, heuristic=None)
 
     def dfs(self, state):
-        """Depth-first search (LIFO open list, no heuristic)."""
+        "Depth-first search LIFO open list, no heuristic"
         return self._search(state, pop_front=False, heuristic=None)
 
     def a_star(self, state, heuristic):
-        """A* search (sorted FIFO open list with f(n) = g(n) + h(n))."""
+        "A* search sorted FIFO open list with f(n) = g(n) + h(n)"
         return self._search(state, pop_front=True, heuristic=heuristic)
