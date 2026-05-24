@@ -98,11 +98,10 @@ class Frogger(arcade.Window):
         return '{}${}'.format(screen_encoding, note)
 
     def on_draw(self):
-        arcade.start_render()
+        self.clear()
 
-        arcade.draw_lrwh_rectangle_textured(0, 0,
-                                            self.width, self.height,
-                                            self.background)
+        arcade.draw_texture_rect(self.background,
+                                 arcade.LBWH(0, 0, self.width, self.height))
 
         texts = ['P{}   Score: {}   Timer: {:.1f}'.format(i+1, frog.score, frog.timer)
                  for i, frog in enumerate(self.frogs)]
@@ -118,7 +117,7 @@ class Frogger(arcade.Window):
                 frog.to_red()
             else:
                 frog.to_green()
-            frog.draw()
+            arcade.draw_sprite(frog)
 
         # arcade.finish_render()
 

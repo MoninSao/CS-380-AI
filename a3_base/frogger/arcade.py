@@ -2,9 +2,10 @@ from .settings import settings
 
 if settings['use_graphics']:
 
-    from arcade import (Sprite, SpriteList, Window, check_for_collision,
-                        close_window, color, draw_lrwh_rectangle_textured,
-                        draw_text, key, load_texture, run, start_render)
+    from arcade import (Sprite, SpriteList, SpriteSheet, Window, LBWH,
+                        check_for_collision, close_window, color,
+                        draw_sprite, draw_texture_rect, draw_text, key,
+                        load_texture, run, start_render)
 
 else:
 

@@ -6,8 +6,8 @@ class Icon:
 
     def __init__(self, name, x, y, encoding, dgx=0, terrain=None):
         self.name = name
-        self.texture = arcade.load_texture(get_image_path('sprites.png'),
-                                           x=x, y=y, width=48, height=48)
+        self.texture = arcade.SpriteSheet(get_image_path('sprites.png')).get_texture(
+            arcade.LBWH(x, y, 48, 48))
         self.encoding = encoding
         self.dgx = dgx
         self.terrain = terrain
