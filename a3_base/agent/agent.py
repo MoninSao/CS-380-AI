@@ -38,7 +38,7 @@ class Q_State(State):
 
         return row_key + ''.join(window)
 
-    def reward(self):
+    def reward(self, prev_y=None):
         '''Returns a reward value for the state.'''
 
         if self.at_goal:
@@ -46,6 +46,9 @@ class Q_State(State):
         elif self.is_done:
             return -10
         else:
+            # small bonus for moving toward the goal (row 0 is the top)
+            if prev_y is not None and self.frog_y < prev_y:
+                return 0.5
             return 0
 
 
@@ -123,7 +126,7 @@ class Agent:
 
         # Bellman update using the previous (S, A) pair
         if self.train and self.prev_state is not None:
-            r = state.reward()
+            r = state.reward(prev_y=self.prev_state.frog_y)
             max_q_next = max(self.q[key].values())
             prev_key = self.prev_state.key
             prev_a = self.prev_action
