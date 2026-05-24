@@ -22,15 +22,21 @@ class Q_State(State):
         that can be used for learning. When implementing a Q table as a
         dictionary, this key is used for accessing the Q values for this
         state within the dictionary.
+
+        Key format (~17 chars):
+          - 2-char zero-padded frog_y (encodes terrain row type)
+          - 15-char 3x5 window centered on frog (rows y-1..y+1, cols x-2..x+2)
         '''
 
-        # this simple key uses the 3 object characters above the frog
-        # and combines them into a key string
-        return ''.join([
-            self.get(self.frog_x - 1, self.frog_y - 1) or '_',
-            self.get(self.frog_x, self.frog_y - 1) or '_',
-            self.get(self.frog_x + 1, self.frog_y - 1) or '_',
-        ])
+        row_key = str(self.frog_y).zfill(2)
+
+        window = []
+        for dy in (-1, 0, 1):
+            for dx in (-2, -1, 0, 1, 2):
+                cell = self.get(self.frog_x + dx, self.frog_y + dy)
+                window.append(cell if cell is not None else '_')
+
+        return row_key + ''.join(window)
 
     def reward(self):
         '''Returns a reward value for the state.'''
@@ -62,6 +68,15 @@ class Agent:
         # (you likely don't need to use or change this)
         self.path = os.path.join(os.path.dirname(
             os.path.realpath(__file__)), 'train', self.name + '.json')
+
+        # Q-learning hyperparameters
+        self.alpha = 0.5    # learning rate
+        self.gamma = 0.9    # discount factor
+        self.epsilon = 0.1  # exploration probability
+
+        # previous (S, A) pair for the Bellman update
+        self.prev_state = None
+        self.prev_action = None
 
         self.load()
 
