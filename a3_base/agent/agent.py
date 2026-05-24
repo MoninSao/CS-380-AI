@@ -114,4 +114,37 @@ class Agent:
         choice among the possible actions. You will need to augment
         the code to implement Q-learning within the agent.
         '''
-        return random.choice(State.ACTIONS)
+        state = Q_State(state_string)
+        key = state.key
+
+        # initialize unseen state in Q-table
+        if key not in self.q:
+            self.q[key] = {a: 0.0 for a in State.ACTIONS}
+
+        # Bellman update using the previous (S, A) pair
+        if self.train and self.prev_state is not None:
+            r = state.reward()
+            max_q_next = max(self.q[key].values())
+            prev_key = self.prev_state.key
+            prev_a = self.prev_action
+            self.q[prev_key][prev_a] = (
+                (1 - self.alpha) * self.q[prev_key][prev_a]
+                + self.alpha * (r + self.gamma * max_q_next)
+            )
+            self.save()
+
+        # episode is over — reset tracking and return no-op
+        if state.is_done:
+            self.prev_state = None
+            self.prev_action = None
+            return '_'
+
+        # ε-greedy action selection
+        if self.train and random.random() < self.epsilon:
+            action = random.choice(State.ACTIONS)
+        else:
+            action = max(self.q[key], key=lambda a: self.q[key][a])
+
+        self.prev_state = state
+        self.prev_action = action
+        return action
