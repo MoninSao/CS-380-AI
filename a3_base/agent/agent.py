@@ -22,10 +22,7 @@ class Q_State(State):
         that can be used for learning. When implementing a Q table as a
         dictionary, this key is used for accessing the Q values for this
         state within the dictionary.
-
-        Key format (~17 chars):
-          - 2-char zero-padded frog_y (encodes terrain row type)
-          - 15-char 3x5 window centered on frog (rows y-1..y+1, cols x-2..x+2)
+.
         '''
 
         row_key = str(self.frog_y).zfill(2)
@@ -113,9 +110,7 @@ class Agent:
         given a state string, it should return the action to be taken
         by the agent.
 
-        The initial implementation of this method is simply a random
-        choice among the possible actions. You will need to augment
-        the code to implement Q-learning within the agent.
+
         '''
         state = Q_State(state_string)
         key = state.key
