@@ -40,6 +40,16 @@ else:
         def draw(self):
             pass
 
+    class SpriteSheet:
+        def __init__(self, *args, **kwargs):
+            pass
+        def get_texture(self, *args, **kwargs):
+            return None
+
+    class LBWH:
+        def __init__(self, *args, **kwargs):
+            pass
+
     def load_texture(*args, **kwargs):
         return None
 
